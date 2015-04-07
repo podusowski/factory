@@ -8,7 +8,7 @@ struct trivial_object
 
 TEST(factory_tests, create_trivial_object)
 {
-    factory<trivial_object> f = make_factory<trivial_object>();
+    factory<trivial_object> f;
     std::shared_ptr<trivial_object> object = f.create();
 
     EXPECT_TRUE(bool(object));
