@@ -25,7 +25,7 @@ struct derived : public base
 
 TEST(factory_tests, factory_is_convertible_base_object_factory)
 {
-    factory<base> f = make_factory<derived>();
+    factory<base> f = factory<derived>();
     auto o = f.create();
     EXPECT_TRUE(bool(dynamic_cast<derived*>(o.get())));
 }

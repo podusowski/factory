@@ -45,9 +45,3 @@ struct factory
 private:
     std::unique_ptr<factory_impl_base<Result>> impl;
 };
-
-template<class T>
-auto make_factory() -> factory<T>
-{
-    return factory<T>();
-}
