@@ -6,7 +6,6 @@ template<class Interface>
 struct factory_impl_base
 {
     virtual auto create() -> std::shared_ptr<Interface> = 0;
-    //virtual auto clone() -> std::unique_ptr<factory_impl_base<Interface>> = 0;
     virtual ~factory_impl_base() {}
 };
 
