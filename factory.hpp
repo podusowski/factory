@@ -6,7 +6,7 @@ template<class Interface>
 struct factory_impl_base
 {
     virtual auto create() -> std::shared_ptr<Interface> = 0;
-    virtual auto clone() -> std::unique_ptr<factory_impl_base<Interface>> = 0;
+    //virtual auto clone() -> std::unique_ptr<factory_impl_base<Interface>> = 0;
     virtual ~factory_impl_base() {}
 };
 
@@ -17,37 +17,37 @@ struct factory_impl : public factory_impl_base<Interface>
     {
         return std::make_shared<Implementation>();
     }
-
-    auto clone() -> std::unique_ptr<factory_impl_base<Interface>> override
-    {
-        return std::make_unique<factory_impl<Interface, Implementation>>();
-    }
 };
 
-template<class Interface>
+template<class Result>
 struct factory
 {
-    explicit factory(std::unique_ptr<factory_impl_base<Interface>> impl) : impl(std::move(impl))
+    typedef Result result_type;
+
+    template<class Factory>
+    factory(Factory && factory)
     {
+        impl = std::make_unique<factory_impl<Result, typename Factory::result_type>>();
     }
 
-    auto create() -> std::shared_ptr<Interface>
+    factory()
+    {
+        impl = std::make_unique<factory_impl<Result, Result>>();
+    }
+
+    factory(const factory & factory) = delete;
+
+    auto create() -> std::shared_ptr<Result>
     {
         return impl->create();
     }
 
-    template<class U>
-    operator factory<U> ()
-    {
-        return factory<U>(impl->clone());
-    }
-
 private:
-    std::unique_ptr<factory_impl_base<Interface>> impl;
+    std::unique_ptr<factory_impl_base<Result>> impl;
 };
 
 template<class T>
 auto make_factory() -> factory<T>
 {
-    return factory<T>(std::make_unique<factory_impl<T, T>>());
+    return factory<T>();
 }
