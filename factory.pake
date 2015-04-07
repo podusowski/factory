@@ -1,1 +1,2 @@
+configuration __default compiler(clang++)
 target application factory_tests sources(factory_tests.cpp) depends_on(gtest) link_with(gtest pthread) include_dirs($gtest.__path) run_after("${__build}/factory_tests") compiler_flags(-std=c++14)

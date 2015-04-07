@@ -8,8 +8,24 @@ struct trivial_object
 
 TEST(factory_tests, create_trivial_object)
 {
-    auto factory = factory::make_factory<trivial_object>();
-    std::shared_ptr<trivial_object> object = factory.create();
+    factory<trivial_object> f = make_factory<trivial_object>();
+    std::shared_ptr<trivial_object> object = f.create();
 
     EXPECT_TRUE(bool(object));
+}
+
+struct base
+{
+    virtual ~base() {}
+};
+
+struct derived : public base
+{
+};
+
+TEST(factory_tests, factory_is_convertible_base_object_factory)
+{
+    factory<base> f = make_factory<derived>();
+    auto o = f.create();
+    EXPECT_TRUE(bool(dynamic_cast<derived*>(o.get())));
 }
