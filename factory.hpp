@@ -34,8 +34,6 @@ struct factory
         impl = std::make_unique<factory_impl<Result, Result>>();
     }
 
-    factory(const factory & factory) = delete;
-
     auto create() -> std::shared_ptr<Result>
     {
         return impl->create();
