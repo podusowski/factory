@@ -23,15 +23,14 @@ struct factory
 {
     typedef Result result_type;
 
-    template<class Factory>
-    factory(Factory && factory)
+    template<class Concrete>
+    static auto bind() -> factory<Result>
     {
-        impl = std::make_unique<factory_impl<Result, typename Factory::result_type>>();
+        return factory<Result>(std::make_unique<factory_impl<Result, Concrete>>());
     }
 
-    factory()
+    factory(std::unique_ptr<factory_impl_base<Result>> impl) : impl(std::move(impl))
     {
-        impl = std::make_unique<factory_impl<Result, Result>>();
     }
 
     auto create() -> std::shared_ptr<Result>
